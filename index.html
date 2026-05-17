@@ -110,8 +110,14 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 @media(max-width:480px){.stage-grid{grid-template-columns:repeat(2,1fr);gap:10px}}
 .stage-card{background:var(--bg-card);border:2px solid var(--line);border-radius:16px;padding:16px 12px;cursor:pointer;transition:.2s;text-align:center;position:relative;overflow:hidden}
 .stage-card:hover{transform:translateY(-2px);border-color:var(--accent);box-shadow:var(--shadow)}
-.stage-card.locked{opacity:.45;cursor:not-allowed;filter:grayscale(.5)}
-.stage-card.locked:hover{transform:none;border-color:var(--line)}
+.stage-card.locked{opacity:.55;cursor:not-allowed}
+.stage-card.locked:hover{transform:none;border-color:var(--line);box-shadow:none}
+.stage-card.locked-prev{filter:grayscale(.5)}
+.stage-card.locked-prev .num{color:var(--ink-soft)}
+.stage-card.locked-cards{border-color:var(--danger);background:rgba(229,115,115,.05)}
+.stage-card.locked-cards .num{color:var(--danger)}
+.stage-card .lock-icon{position:absolute;top:6px;left:8px;font-size:.9rem;opacity:.7}
+.stage-card .need-msg{font-size:.68rem;color:var(--danger);margin-top:4px;font-family:'Jua',sans-serif;line-height:1.2}
 .stage-card.cleared{border-color:var(--success);background:linear-gradient(135deg,rgba(95,184,120,.08) 0%,var(--bg-card) 100%)}
 .stage-card.cleared::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:var(--success)}
 .stage-card .num{font-family:'Black Han Sans',sans-serif;font-size:1.7rem;color:var(--accent);line-height:1}
@@ -568,36 +574,63 @@ function renderStageGrid(){
   const grid = document.getElementById('stageGrid');
   const info = document.getElementById('stageInfo');
   const pool = getPoolForCat(stageCat);
-  info.textContent = `사용 가능한 카드: ${pool.length}장`;
+  
+  // 카테고리 라벨
+  const catLabels = {
+    'all-rock': '암석 전체', '퇴적암':'퇴적암', '화성암':'화성암', '변성암':'변성암',
+    '광물':'광물', 'all':'전체'
+  };
+  // 최대 가능 단계 계산
+  const maxStage = STAGES.filter(s => pool.length >= s.pairs).length;
+  info.innerHTML = `${catLabels[stageCat]} 카드 <b style="color:var(--ink)">${pool.length}장</b> · 도전 가능 <b style="color:var(--accent)">${maxStage}단계</b>`;
+  
   grid.innerHTML = '';
-  let prevCleared = true; // 첫 단계는 항상 열림
+  let prevCleared = true;
   STAGES.forEach(s=>{
     const enough = pool.length >= s.pairs;
     const key = `${stageCat}_${s.lvl}`;
     const rec = progress[key];
     const cleared = !!rec;
-    const locked = !enough || (!prevCleared && !cleared && s.lvl > 1);
+    // 잠금 사유 분리
+    const lockedByCards = !enough;
+    const lockedByPrev = enough && !prevCleared && !cleared && s.lvl > 1;
+    const locked = lockedByCards || lockedByPrev;
     
     const card = document.createElement('div');
-    card.className = 'stage-card' + (locked?' locked':'') + (cleared?' cleared':'');
+    let cls = 'stage-card';
+    if(cleared) cls += ' cleared';
+    if(lockedByCards) cls += ' locked locked-cards';
+    else if(lockedByPrev) cls += ' locked locked-prev';
+    card.className = cls;
+    
+    let lockIcon = '';
+    let needMsg = '';
+    if(lockedByCards){
+      lockIcon = '<div class="lock-icon">🚫</div>';
+      needMsg = `<div class="need-msg">${s.pairs}장 필요<br>(현재 ${pool.length}장)</div>`;
+    } else if(lockedByPrev){
+      lockIcon = '<div class="lock-icon">🔒</div>';
+    }
+    
     card.innerHTML = `
+      ${lockIcon}
       ${rec ? `<div class="star">${'⭐'.repeat(rec.stars)}</div>` : ''}
       <div class="num">${s.lvl}</div>
       <div class="ic">${s.ic}</div>
       <div class="nm">${s.nm}</div>
       <div class="cnt">${s.pairs}쌍 (${s.pairs*2}장)</div>
-      ${!enough ? `<div style="font-size:.7rem;color:var(--danger);margin-top:4px">카드 부족</div>` : ''}
+      ${needMsg}
     `;
     if(!locked){
       card.onclick = ()=>startStage(s);
-    } else if(!enough){
+    } else if(lockedByCards){
       card.onclick = ()=>toast(`이 단계는 카드가 ${s.pairs}장 이상 필요해요!`);
     } else {
       card.onclick = ()=>toast('이전 단계를 먼저 깨주세요!');
     }
     grid.appendChild(card);
-    // 다음 단계 잠금 여부는 현재 단계가 깨졌는지에 의존
-    if(!cleared) prevCleared = false;
+    if(!cleared && enough) prevCleared = false;
+    // 카드 부족 단계는 자동으로 통과 처리 (그 뒤 단계도 카드 부족이면 어차피 잠김)
   });
 }
 
