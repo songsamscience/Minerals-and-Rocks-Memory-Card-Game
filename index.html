@@ -176,13 +176,21 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .btn-ghost:hover{border-color:var(--accent)}
 
 /* ===== 게임 화면 ===== */
-.game-header{display:flex;justify-content:space-between;align-items:center;background:var(--bg-card);padding:12px 18px;border-radius:18px;border:2px solid var(--line);margin-bottom:14px;flex-wrap:wrap;gap:10px;box-shadow:var(--shadow)}
-.stage-badge{display:inline-flex;align-items:center;gap:8px;background:var(--accent-soft);padding:6px 14px;border-radius:20px;font-family:'Jua',sans-serif;font-size:.9rem;color:var(--ink)}
-.stage-badge .lvl{font-family:'Black Han Sans',sans-serif;color:var(--accent);font-size:1.05rem}
-.stat-group{display:flex;gap:16px;flex-wrap:wrap}
-.stat{display:flex;flex-direction:column;align-items:center;min-width:54px}
-.stat .label{font-family:'Jua',sans-serif;font-size:.72rem;color:var(--ink-soft);letter-spacing:.5px}
-.stat .value{font-family:'Black Han Sans',sans-serif;font-size:1.45rem;color:var(--ink);line-height:1;margin-top:2px}
+.game-header{display:flex;justify-content:space-between;align-items:center;background:var(--bg-card);padding:10px 14px;border-radius:14px;border:2px solid var(--line);margin-bottom:10px;flex-wrap:wrap;gap:8px;box-shadow:var(--shadow)}
+@media(max-width:520px){
+  .game-header{padding:8px 10px;border-radius:12px;gap:6px;margin-bottom:8px}
+}
+.stage-badge{display:inline-flex;align-items:center;gap:6px;background:var(--accent-soft);padding:5px 12px;border-radius:18px;font-family:'Jua',sans-serif;font-size:.85rem;color:var(--ink)}
+.stage-badge .lvl{font-family:'Black Han Sans',sans-serif;color:var(--accent);font-size:1rem}
+.stat-group{display:flex;gap:14px;flex-wrap:wrap}
+@media(max-width:520px){.stat-group{gap:10px}}
+.stat{display:flex;flex-direction:column;align-items:center;min-width:48px}
+.stat .label{font-family:'Jua',sans-serif;font-size:.7rem;color:var(--ink-soft);letter-spacing:.3px}
+.stat .value{font-family:'Black Han Sans',sans-serif;font-size:1.3rem;color:var(--ink);line-height:1;margin-top:2px}
+@media(max-width:520px){
+  .stat .value{font-size:1.1rem}
+  .stat .label{font-size:.65rem}
+}
 .stat.timer .value{color:var(--accent)}
 .stat.match .value{color:var(--success)}
 .stat.combo .value{color:#e85a8c}
@@ -199,18 +207,27 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 }
 
 /* 진행률 바 */
-.progress-wrap{height:8px;background:var(--bg-soft);border-radius:8px;overflow:hidden;margin-bottom:14px}
+.progress-wrap{height:8px;background:var(--bg-soft);border-radius:8px;overflow:hidden;margin-bottom:10px;flex-shrink:0}
+@media(max-width:520px){.progress-wrap{height:6px;margin-bottom:8px}}
 .progress-bar{height:100%;background:linear-gradient(90deg,var(--accent),var(--success));border-radius:8px;transition:width .4s ease;width:0}
 
 /* 보드 */
-.board{display:grid;gap:8px;margin-bottom:20px}
+.board{display:grid;gap:8px;margin-bottom:0;align-self:center;justify-content:center;width:100%}
 @media(max-width:520px){.board{gap:6px}}
+
+/* 게임 중에는 푸터 숨김 (화면 공간 확보) */
+body.gaming .footer{display:none}
+body.gaming{overflow:hidden}
+body.gaming .app{padding-bottom:14px;min-height:100vh;min-height:100dvh;display:flex;flex-direction:column}
+body.gaming #gameScreen{flex:1;display:flex;flex-direction:column;min-height:0}
+body.gaming #gameScreen .board{flex:1;min-height:0;align-content:center}
 .card{aspect-ratio:1;border-radius:14px;cursor:pointer;perspective:1000px;position:relative}
 .card-inner{width:100%;height:100%;position:relative;transform-style:preserve-3d;transition:transform .55s cubic-bezier(.4,.0,.2,1)}
 .card.flipped .card-inner,.card.matched .card-inner{transform:rotateY(180deg)}
 .card-face{position:absolute;inset:0;border-radius:14px;backface-visibility:hidden;-webkit-backface-visibility:hidden;overflow:hidden;box-shadow:0 2px 0 rgba(0,0,0,.12)}
 .card-front{background:var(--card-bg-grad);display:flex;align-items:center;justify-content:center;border:3px solid var(--card-border-color)}
-.card-front .logo{font-family:'Black Han Sans',sans-serif;color:rgba(255,255,255,.95);font-size:clamp(.9rem,3.2vw,1.5rem);text-align:center;text-shadow:0 2px 0 rgba(0,0,0,.15);letter-spacing:.5px;line-height:1.1}
+.card-front .logo{font-family:'Black Han Sans',sans-serif;color:rgba(255,255,255,.95);font-size:clamp(.7rem,3.5cqw,1.4rem);text-align:center;text-shadow:0 2px 0 rgba(0,0,0,.15);letter-spacing:.3px;line-height:1.1}
+.card{container-type:inline-size}
 .card-front::before,.card-front::after{content:'';position:absolute;border-radius:50%;background:rgba(255,255,255,.12)}
 .card-front::before{width:40%;height:40%;top:-15%;right:-15%}
 .card-front::after{width:30%;height:30%;bottom:-10%;left:-10%}
@@ -797,6 +814,9 @@ function launchGame(picked){
   
   renderBoard();
   showScreen('gameScreen');
+  document.body.classList.add('gaming');
+  // 게임 화면 렌더된 후 보드 사이즈 한 번 더 맞춤 (정확한 DOM 측정)
+  requestAnimationFrame(()=>fitBoardToScreen());
   
   clearInterval(timerInt);
   timerInt = setInterval(()=>{
@@ -807,23 +827,8 @@ function renderBoard(){
   const board = document.getElementById('board');
   board.innerHTML = '';
   const total = gameCards.length;
-  let cols;
-  if(total <= 4) cols = 2;
-  else if(total <= 6) cols = 3;
-  else if(total <= 8) cols = 4;
-  else if(total <= 12) cols = 4;
-  else if(total <= 16) cols = 4;
-  else if(total <= 20) cols = 5;
-  else if(total <= 24) cols = 6;
-  else if(total <= 30) cols = 6;
-  else cols = 6;
-  if(window.innerWidth < 520){
-    if(total <= 4) cols = 2;
-    else if(total <= 12) cols = 3;
-    else if(total <= 20) cols = 4;
-    else cols = 5;
-  }
-  board.style.gridTemplateColumns = `repeat(${cols},1fr)`;
+  
+  // 카드 DOM 먼저 만들어두기
   gameCards.forEach((c,i)=>{
     const el = document.createElement('div');
     el.className = 'card'; el.dataset.pair = c.pairId;
@@ -838,6 +843,70 @@ function renderBoard(){
     el.addEventListener('click', ()=>flipCard(el));
     board.appendChild(el);
   });
+  
+  // 화면에 맞게 컬럼/카드 크기 동적 계산
+  fitBoardToScreen();
+}
+
+// 보드를 화면 안에 꽉 채우되 절대 넘치지 않게
+function fitBoardToScreen(){
+  const board = document.getElementById('board');
+  if(!board || !gameCards.length) return;
+  const total = gameCards.length;
+  
+  // 사용 가능한 영역 측정
+  const header = document.querySelector('#gameScreen .game-header');
+  const progress = document.querySelector('#gameScreen .progress-wrap');
+  const headerH = header ? header.getBoundingClientRect().height : 80;
+  const progressH = progress ? progress.getBoundingClientRect().height : 16;
+  // 뷰포트에서 헤더, 진행률바, 상하 여백 빼기
+  const vw = window.innerWidth;
+  const vh = window.innerHeight;
+  // 가로 가용폭: 앱 컨테이너 패딩(28px) 제외
+  const hPad = 28;
+  const availW = Math.min(vw, 1100) - hPad;
+  // 세로 가용높이: 상단 패딩(14)+헤더+gap+progress+gap+보드+하단여백
+  // app top padding 14 + header + 14 + progress + 14 + 보드 + bottom margin 16
+  const availH = vh - 14 - headerH - 14 - progressH - 14 - 16;
+  
+  // 카드 간 gap (모바일/데스크탑)
+  const gap = vw < 520 ? 6 : 8;
+  
+  // 카드 종횡비는 1:1. 가능한 컬럼 후보들 중 최적 찾기
+  // 후보: 2~8 (카드 수 이하)
+  let best = null;
+  for(let cols = 2; cols <= Math.min(8, total); cols++){
+    const rows = Math.ceil(total / cols);
+    // 가로 기준 카드 크기
+    const cardW = (availW - gap * (cols - 1)) / cols;
+    // 세로 기준 카드 크기 (정사각형이니까 높이도 같아야 함)
+    const cardH = (availH - gap * (rows - 1)) / rows;
+    // 둘 중 작은 값이 실제 카드 한 변의 길이
+    const size = Math.min(cardW, cardH);
+    // 너무 작으면 패스
+    if(size < 50) continue;
+    if(!best || size > best.size){
+      best = {cols, rows, size};
+    }
+  }
+  
+  if(!best){
+    // 정말 화면이 작으면 최소 사이즈 보장 + 스크롤 허용
+    let cols = total <= 4 ? 2 : (total <= 12 ? 3 : (total <= 24 ? 4 : 5));
+    if(vw < 380) cols = Math.min(cols, 4);
+    best = {cols, rows: Math.ceil(total/cols), size: Math.max(55, (availW - gap*(cols-1))/cols)};
+    // 보드에 스크롤 허용 (예외 케이스)
+    board.style.overflowY = 'auto';
+  } else {
+    board.style.overflowY = 'visible';
+  }
+  
+  board.style.gridTemplateColumns = `repeat(${best.cols}, 1fr)`;
+  board.style.gap = `${gap}px`;
+  // 보드 자체 최대 폭 제한해서 정확히 size * cols + gap 으로 만들기
+  const boardW = best.size * best.cols + gap * (best.cols - 1);
+  board.style.maxWidth = `${Math.ceil(boardW)}px`;
+  board.style.margin = '0 auto';
 }
 function flipCard(el){
   if(lock) return;
@@ -961,6 +1030,7 @@ function winNext(){
 function quitGame(){
   clearInterval(timerInt);
   document.getElementById('winOverlay').classList.remove('show');
+  document.body.classList.remove('gaming');
   if(gameMode === 'stage'){
     goStages();
   } else {
@@ -1034,17 +1104,18 @@ function confetti(){
   }
 }
 
-// 리사이즈 대응
-window.addEventListener('resize', ()=>{
-  if(document.getElementById('gameScreen').classList.contains('active') && gameCards.length){
-    renderBoard();
-    // 카드 상태 복원
-    document.querySelectorAll('.card').forEach((el,i)=>{
-      // 보드는 새로 그렸으므로 매치/플립 상태가 사라짐. 정확하게는 상태 추적 필요.
-      // 진행 중 리사이즈는 드물어 단순 처리
-    });
-  }
-});
+// 리사이즈/오리엔테이션 대응
+let resizeTm = null;
+function onResize(){
+  clearTimeout(resizeTm);
+  resizeTm = setTimeout(()=>{
+    if(document.getElementById('gameScreen').classList.contains('active') && gameCards.length){
+      fitBoardToScreen();
+    }
+  }, 100);
+}
+window.addEventListener('resize', onResize);
+window.addEventListener('orientationchange', ()=>setTimeout(onResize, 200));
 
 // 시작 시 단계 화면 카드 카운트 미리 계산
 renderCounts();
