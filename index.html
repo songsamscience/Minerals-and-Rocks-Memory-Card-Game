@@ -2,7 +2,15 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#e8a951" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1a1d2a" media="(prefers-color-scheme: dark)">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="송쌤과학 메모리">
+<meta name="format-detection" content="telephone=no">
+<meta name="description" content="송쌤과학 광물·암석 메모리 카드 게임 - 학생들과 함께 짝을 맞추며 배우는 과학">
 <title>송쌤과학 광물·암석 메모리 카드 게임</title>
 <link href="https://fonts.googleapis.com/css2?family=Jua&family=Gaegu:wght@400;700&family=Black+Han+Sans&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -51,10 +59,10 @@
   --card-border-color:#5a6080;
 }
 
-html,body{height:100%;background:var(--bg);color:var(--ink);font-family:'Gaegu','Jua',sans-serif;overflow-x:hidden;transition:background .3s,color .3s}
+html,body{height:100%;background:var(--bg);color:var(--ink);font-family:'Gaegu','Jua',sans-serif;overflow-x:hidden;transition:background .3s,color .3s;-webkit-tap-highlight-color:transparent;-webkit-text-size-adjust:100%}
 button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;touch-action:manipulation}
 
-.app{max-width:1100px;margin:0 auto;padding:14px 14px 40px;min-height:100vh;min-height:100dvh}
+.app{max-width:1100px;margin:0 auto;padding:14px 14px 40px;min-height:100vh;min-height:100dvh;padding-left:max(14px, env(safe-area-inset-left));padding-right:max(14px, env(safe-area-inset-right));padding-top:max(14px, env(safe-area-inset-top));padding-bottom:max(40px, env(safe-area-inset-bottom))}
 
 /* 헤더 */
 .brand{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;gap:8px;flex-wrap:wrap}
@@ -63,7 +71,9 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .brand-left .sub{font-family:'Jua',sans-serif;color:var(--ink-soft);font-size:.82rem;margin-top:2px}
 .brand-right{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .icon-btn{padding:8px 12px;border-radius:20px;background:var(--bg-card);border:2px solid var(--line);font-family:'Jua',sans-serif;font-size:.85rem;display:flex;align-items:center;gap:6px;transition:.2s;color:var(--ink)}
-.icon-btn:hover{border-color:var(--accent);transform:translateY(-1px)}
+@media (hover:hover){
+  .icon-btn:hover{border-color:var(--accent);transform:translateY(-1px)}
+}
 .icon-btn.off{opacity:.5}
 
 /* 푸터 (SNS + 저작권) */
@@ -90,8 +100,21 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .home-hero .desc{font-family:'Jua',sans-serif;color:var(--ink-soft);font-size:1rem;line-height:1.5}
 
 .mode-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin:18px 0 26px}
+
+/* 홈 화면 통계 타일 */
+.stats-overview{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:18px 0 22px;padding:14px;background:linear-gradient(135deg,var(--accent-soft) 0%,var(--bg-card) 100%);border-radius:18px;border:2px solid var(--line);position:relative}
+@media(max-width:520px){.stats-overview{grid-template-columns:repeat(2,1fr);gap:8px;padding:10px}}
+.stat-tile{background:var(--bg-card);padding:12px 6px;border-radius:12px;text-align:center;border:1.5px solid var(--line)}
+.stat-tile-label{font-family:'Jua',sans-serif;font-size:.78rem;color:var(--ink-soft);margin-bottom:4px;white-space:nowrap}
+.stat-tile-value{font-family:'Black Han Sans',sans-serif;font-size:1.5rem;color:var(--accent);line-height:1}
+@media(max-width:520px){.stat-tile-value{font-size:1.3rem}}
+.reset-stats-btn{position:absolute;top:6px;right:8px;width:24px;height:24px;border-radius:50%;background:rgba(255,255,255,.6);border:1px solid var(--line);font-size:.85rem;color:var(--ink-soft);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:.15s;font-family:'Jua',sans-serif}
+.reset-stats-btn:hover{background:#fff;color:var(--danger);transform:rotate(180deg)}
+[data-theme="dark"] .reset-stats-btn{background:rgba(0,0,0,.3);color:var(--ink-soft)}
 .mode-card{background:var(--bg-card);border:2px solid var(--line);border-radius:20px;padding:22px 18px;cursor:pointer;transition:.25s;text-align:center;box-shadow:var(--shadow);position:relative;overflow:hidden}
-.mode-card:hover{transform:translateY(-4px);border-color:var(--accent)}
+@media (hover:hover){
+  .mode-card:hover{transform:translateY(-4px);border-color:var(--accent)}
+}
 .mode-card .ic{font-size:2.8rem;line-height:1;margin-bottom:10px}
 .mode-card h3{font-family:'Black Han Sans',sans-serif;font-size:1.25rem;color:var(--ink);margin-bottom:4px}
 .mode-card .d{font-family:'Jua',sans-serif;color:var(--ink-soft);font-size:.92rem;line-height:1.4}
@@ -109,9 +132,11 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .stage-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-bottom:20px}
 @media(max-width:480px){.stage-grid{grid-template-columns:repeat(2,1fr);gap:10px}}
 .stage-card{background:var(--bg-card);border:2px solid var(--line);border-radius:16px;padding:16px 12px;cursor:pointer;transition:.2s;text-align:center;position:relative;overflow:hidden}
-.stage-card:hover{transform:translateY(-2px);border-color:var(--accent);box-shadow:var(--shadow)}
+@media (hover:hover){
+  .stage-card:hover{transform:translateY(-2px);border-color:var(--accent);box-shadow:var(--shadow)}
+  .stage-card.locked:hover{transform:none;border-color:var(--line);box-shadow:none}
+}
 .stage-card.locked{opacity:.55;cursor:not-allowed}
-.stage-card.locked:hover{transform:none;border-color:var(--line);box-shadow:none}
 .stage-card.locked-prev{filter:grayscale(.5)}
 .stage-card.locked-prev .num{color:var(--ink-soft)}
 .stage-card.locked-cards{border-color:var(--danger);background:rgba(229,115,115,.05)}
@@ -125,6 +150,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .stage-card .nm{font-family:'Jua',sans-serif;font-size:.92rem;color:var(--ink);line-height:1.2}
 .stage-card .cnt{font-family:'Jua',sans-serif;font-size:.78rem;color:var(--ink-soft);margin-top:4px}
 .stage-card .star{position:absolute;top:6px;right:8px;font-size:1.1rem;color:#ffb84d}
+.stage-card .best-score{font-family:'Jua',sans-serif;font-size:.72rem;color:var(--accent);margin-top:4px;font-weight:bold}
 
 /* ===== 자유 선택 라이브러리 ===== */
 .section-tabs{display:flex;gap:8px;margin:6px 0 16px;flex-wrap:wrap}
@@ -143,7 +169,9 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .photo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin-bottom:20px}
 @media(max-width:520px){.photo-grid{grid-template-columns:repeat(2,1fr);gap:10px}}
 .photo-card{background:var(--bg-card);border-radius:14px;padding:10px 10px 12px;border:2px solid var(--line);position:relative;transition:.2s;cursor:pointer;display:flex;flex-direction:column;gap:8px}
-.photo-card:hover{transform:translateY(-2px);border-color:var(--accent);box-shadow:var(--shadow)}
+@media (hover:hover){
+  .photo-card:hover{transform:translateY(-2px);border-color:var(--accent);box-shadow:var(--shadow)}
+}
 .photo-card.selected{border-color:var(--accent);background:var(--accent-soft);box-shadow:var(--shadow)}
 .photo-card.selected::after{content:'✓';position:absolute;top:8px;right:8px;width:26px;height:26px;background:var(--accent);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:.95rem;font-family:'Jua',sans-serif;z-index:2;box-shadow:0 2px 6px rgba(232,169,81,.5)}
 .photo-card .img-wrap{width:100%;aspect-ratio:1;border-radius:10px;overflow:hidden;background:var(--bg-soft);flex-shrink:0}
@@ -165,7 +193,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .upload-card input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer}
 
 /* 액션 바 */
-.action-bar{position:sticky;bottom:14px;background:var(--bg-card);border:2px solid var(--line);border-radius:24px;padding:10px 14px;display:flex;align-items:center;gap:12px;box-shadow:var(--shadow);z-index:5;flex-wrap:wrap}
+.action-bar{position:sticky;bottom:14px;bottom:max(14px, env(safe-area-inset-bottom));background:var(--bg-card);border:2px solid var(--line);border-radius:24px;padding:10px 14px;display:flex;align-items:center;gap:12px;box-shadow:var(--shadow);z-index:5;flex-wrap:wrap}
 .action-bar .info{font-family:'Jua',sans-serif;color:var(--ink-soft);font-size:.9rem;flex:1;min-width:140px}
 .action-bar .info b{color:var(--ink);font-size:1.05rem}
 .btn-main{background:var(--accent);color:#fff;padding:11px 22px;border-radius:18px;font-family:'Black Han Sans',sans-serif;font-size:1rem;letter-spacing:.5px;transition:.15s;box-shadow:0 3px 0 var(--accent-dark)}
@@ -260,12 +288,38 @@ body.gaming #gameScreen .board{flex:1;min-height:0;align-content:center}
 .win-stat .v small{font-size:.7em;font-weight:normal}
 .win-rating{font-family:'Black Han Sans',sans-serif;font-size:1.3rem;margin-bottom:6px;color:var(--accent)}
 .win-rating .stars{font-size:1.6rem;color:#ffb84d;letter-spacing:4px}
+
+/* 점수 카드 */
+.score-card{margin-bottom:14px;background:linear-gradient(135deg,var(--accent) 0%,#d9933e 100%);border-radius:14px;padding:14px;color:#fff;box-shadow:0 4px 12px rgba(232,169,81,.3)}
+.score-main{text-align:center;margin-bottom:8px}
+.score-label{font-family:'Jua',sans-serif;font-size:.85rem;opacity:.9;letter-spacing:1px;margin-bottom:2px}
+.score-value{font-family:'Black Han Sans',sans-serif;font-size:2.4rem;line-height:1;text-shadow:0 2px 4px rgba(0,0,0,.2)}
+.score-best{font-family:'Jua',sans-serif;font-size:.85rem;margin-top:4px;color:#fff8e0;min-height:1.2em}
+.score-best.new-record{font-weight:bold;color:#fff;animation:newRecord 1s ease infinite alternate}
+@keyframes newRecord{from{transform:scale(1)}to{transform:scale(1.05)}}
+.score-detail{margin-top:8px;background:rgba(255,255,255,.15);border-radius:10px;overflow:hidden}
+.score-detail summary{padding:8px 12px;font-family:'Jua',sans-serif;font-size:.85rem;cursor:pointer;list-style:none;text-align:center;outline:none;-webkit-user-select:none;user-select:none}
+.score-detail summary::-webkit-details-marker{display:none}
+.score-detail[open] summary{border-bottom:1px solid rgba(255,255,255,.2)}
+.breakdown{padding:10px 14px;font-family:'Jua',sans-serif;font-size:.85rem;display:grid;gap:5px}
+.breakdown .row{display:flex;justify-content:space-between;align-items:center;line-height:1.3}
+.breakdown .row.total{border-top:1px solid rgba(255,255,255,.3);padding-top:6px;margin-top:3px;font-family:'Black Han Sans',sans-serif;font-size:.95rem}
+.breakdown .row .pts{font-weight:bold}
 .win-message{font-family:'Jua',sans-serif;color:var(--ink-soft);font-size:.95rem;margin-bottom:18px;line-height:1.5}
 .win-actions{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
 
 /* 토스트 */
-.toast{position:fixed;top:14px;left:50%;transform:translateX(-50%) translateY(-100px);background:var(--ink);color:var(--bg);padding:10px 20px;border-radius:24px;font-family:'Jua',sans-serif;font-size:.95rem;z-index:60;transition:.3s ease;opacity:0;box-shadow:0 8px 24px rgba(0,0,0,.2)}
+.toast{position:fixed;top:14px;top:max(14px, env(safe-area-inset-top));left:50%;transform:translateX(-50%) translateY(-100px);background:var(--ink);color:var(--bg);padding:10px 20px;border-radius:24px;font-family:'Jua',sans-serif;font-size:.95rem;z-index:60;transition:.3s ease;opacity:0;box-shadow:0 8px 24px rgba(0,0,0,.2)}
 .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+
+/* 확인 모달 */
+.confirm-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:70;padding:20px;animation:fadeIn .25s ease}
+.confirm-overlay.show{display:flex}
+.confirm-box{background:var(--bg-card);border-radius:18px;padding:24px 22px;max-width:340px;width:100%;text-align:center;border:2px solid var(--line);box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.confirm-box .confirm-ic{font-size:2.5rem;line-height:1;margin-bottom:10px}
+.confirm-box h3{font-family:'Black Han Sans',sans-serif;font-size:1.2rem;color:var(--ink);margin-bottom:6px}
+.confirm-box p{font-family:'Jua',sans-serif;color:var(--ink-soft);font-size:.9rem;line-height:1.5;margin-bottom:18px}
+.confirm-actions{display:flex;gap:8px;justify-content:center}
 
 /* 빈 상태 */
 .empty-state{text-align:center;padding:40px 20px;color:var(--ink-soft);font-family:'Jua',sans-serif}
@@ -303,6 +357,28 @@ body.gaming #gameScreen .board{flex:1;min-height:0;align-content:center}
       <div class="title">어떻게 <span class="accent">놀까요?</span></div>
       <div class="desc">단계별로 도전하거나, 원하는 카드만 골라서 자유롭게!</div>
     </div>
+    
+    <!-- 누적 통계 카드 -->
+    <div class="stats-overview" id="statsOverview">
+      <div class="stat-tile">
+        <div class="stat-tile-label">🏆 누적 점수</div>
+        <div class="stat-tile-value" id="totalScoreVal">0</div>
+      </div>
+      <div class="stat-tile">
+        <div class="stat-tile-label">🎮 플레이</div>
+        <div class="stat-tile-value" id="gamesPlayedVal">0</div>
+      </div>
+      <div class="stat-tile">
+        <div class="stat-tile-label">⭐ 최고 점수</div>
+        <div class="stat-tile-value" id="bestScoreVal">0</div>
+      </div>
+      <div class="stat-tile">
+        <div class="stat-tile-label">🌟 3별 클리어</div>
+        <div class="stat-tile-value" id="perfectVal">0</div>
+      </div>
+      <button class="reset-stats-btn" onclick="resetStats()" title="기록 초기화">↻</button>
+    </div>
+    
     <div class="mode-cards">
       <div class="mode-card stage" onclick="goStages()">
         <div class="ic">🎯</div>
@@ -422,14 +498,28 @@ body.gaming #gameScreen .board{flex:1;min-height:0;align-content:center}
       <div class="win-stat"><span class="l">뒤집기</span><span class="v" id="winMoves">0</span></div>
       <div class="win-stat"><span class="l">최대 콤보</span><span class="v">x<span id="winCombo">0</span></span></div>
     </div>
+    
+    <!-- 점수 카드 -->
+    <div class="score-card">
+      <div class="score-main">
+        <div class="score-label">획득 점수</div>
+        <div class="score-value" id="winScoreVal">0</div>
+        <div class="score-best" id="winBestNotice"></div>
+      </div>
+      <details class="score-detail">
+        <summary>점수 자세히 보기</summary>
+        <div class="breakdown" id="winBreakdown"></div>
+      </details>
+    </div>
+    
     <div class="win-rating">
       <div class="stars" id="winStars">⭐⭐⭐</div>
-      <div id="winScore"></div>
     </div>
     <div class="win-message" id="winMsg"></div>
     <div class="win-actions">
       <button class="btn-main" id="winNextBtn" onclick="winNext()">다음 →</button>
-      <button class="btn-ghost" onclick="captureWin()">📷 캡쳐</button>
+      <button class="btn-ghost" onclick="captureWin('share')">📤 공유</button>
+      <button class="btn-ghost" onclick="captureWin('download')">💾 다운로드</button>
       <button class="btn-ghost" onclick="quitGame()">처음으로</button>
     </div>
   </div>
@@ -437,6 +527,19 @@ body.gaming #gameScreen .board{flex:1;min-height:0;align-content:center}
 
 <div class="combo-burst" id="comboBurst"></div>
 <div class="toast" id="toast"></div>
+
+<!-- 확인 모달 -->
+<div class="confirm-overlay" id="confirmModal">
+  <div class="confirm-box">
+    <div class="confirm-ic">⚠️</div>
+    <h3 id="confirmTitle">확인</h3>
+    <p id="confirmMsg"></p>
+    <div class="confirm-actions">
+      <button class="btn-ghost" id="confirmNo">취소</button>
+      <button class="btn-main" id="confirmYes" style="background:var(--danger);box-shadow:0 3px 0 #c44848">초기화</button>
+    </div>
+  </div>
+</div>
 
 <script>
 // ===== 데이터 =====
@@ -464,7 +567,8 @@ let currentSection = 'rock';
 let currentCat = 'all';
 let selected = new Set();
 let stageCat = 'all-rock';
-let progress = {}; // {category_lvl: {stars, bestMoves, bestTime}}
+let progress = {}; // {category_lvl: {stars, bestMoves, bestTime, bestScore}}
+let stats = {totalScore:0, gamesPlayed:0, perfectClears:0, bestSingleScore:0};
 
 // 게임 상태
 let gameMode = 'free'; // 'free' | 'stage'
@@ -486,7 +590,17 @@ function loadProgress(){
     if(s) progress = JSON.parse(s);
   }catch(e){}
 }
+function saveStats(){
+  try{ localStorage.setItem('songssam_stats', JSON.stringify(stats)); }catch(e){}
+}
+function loadStats(){
+  try{
+    const s = localStorage.getItem('songssam_stats');
+    if(s) stats = Object.assign(stats, JSON.parse(s));
+  }catch(e){}
+}
 loadProgress();
+loadStats();
 
 // ===== 테마 =====
 function toggleTheme(){
@@ -545,6 +659,12 @@ function toggleSound(){
   if(soundOn) sndTick();
 }
 
+// HTML escape (사용자 입력 안전 처리)
+function esc(s){
+  if(s == null) return '';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
 // ===== 토스트 =====
 function toast(msg, dur=1800){
   const t = document.getElementById('toast');
@@ -558,7 +678,39 @@ function showScreen(id){
   document.getElementById(id).classList.add('active');
   window.scrollTo(0,0);
 }
-function goHome(){ showScreen('homeScreen'); sndTick(); }
+function renderHomeStats(){
+  document.getElementById('totalScoreVal').textContent = stats.totalScore.toLocaleString();
+  document.getElementById('gamesPlayedVal').textContent = stats.gamesPlayed;
+  document.getElementById('bestScoreVal').textContent = stats.bestSingleScore.toLocaleString();
+  document.getElementById('perfectVal').textContent = stats.perfectClears;
+}
+function resetStats(){
+  showConfirm('정말 모든 기록을 초기화할까요?', 
+    '누적 점수, 플레이 횟수, 별점, 단계 진행도가 모두 사라져요.',
+    ()=>{
+      stats = {totalScore:0, gamesPlayed:0, perfectClears:0, bestSingleScore:0};
+      progress = {};
+      saveStats(); saveProgress();
+      renderHomeStats();
+      toast('기록을 초기화했어요!');
+    });
+}
+
+// 커스텀 확인 모달
+function showConfirm(title, msg, onYes){
+  const modal = document.getElementById('confirmModal');
+  document.getElementById('confirmTitle').textContent = title;
+  document.getElementById('confirmMsg').textContent = msg;
+  document.getElementById('confirmYes').onclick = ()=>{
+    modal.classList.remove('show');
+    if(onYes) onYes();
+  };
+  document.getElementById('confirmNo').onclick = ()=>{
+    modal.classList.remove('show');
+  };
+  modal.classList.add('show');
+}
+function goHome(){ showScreen('homeScreen'); renderHomeStats(); sndTick(); }
 function goStages(){
   showScreen('stagesScreen');
   renderStageGrid();
@@ -636,6 +788,7 @@ function renderStageGrid(){
       <div class="ic">${s.ic}</div>
       <div class="nm">${s.nm}</div>
       <div class="cnt">${s.pairs}쌍 (${s.pairs*2}장)</div>
+      ${rec && rec.bestScore ? `<div class="best-score">최고 ${rec.bestScore.toLocaleString()}점</div>` : ''}
       ${needMsg}
     `;
     if(!locked){
@@ -691,14 +844,15 @@ function renderGrid(){
     filtered.forEach(({p,i})=>{
       const card = document.createElement('div');
       card.className = 'photo-card' + (selected.has(i)?' selected':'');
+      card.dataset.idx = i;
       card.onclick = ()=>toggleSelect(i);
       card.innerHTML = `
-        <div class="img-wrap"><img src="${p.img}" alt="${p.name}"></div>
+        <div class="img-wrap"><img src="${p.img}" alt="${esc(p.name)}"></div>
         <div class="meta">
-          <div class="name">${p.name}</div>
+          <div class="name">${esc(p.name)}</div>
           <div class="tags">
-            ${p.category ? `<span class="tag cat-${p.category}">${p.category}</span>` : ''}
-            ${p.detail ? `<span class="tag">${p.detail}</span>` : ''}
+            ${p.category ? `<span class="tag cat-${esc(p.category)}">${esc(p.category)}</span>` : ''}
+            ${p.detail ? `<span class="tag">${esc(p.detail)}</span>` : ''}
           </div>
         </div>`;
       grid.appendChild(card);
@@ -715,7 +869,11 @@ function renderGrid(){
 }
 function toggleSelect(idx){
   if(selected.has(idx)) selected.delete(idx); else selected.add(idx);
-  sndTick(); renderGrid();
+  sndTick();
+  // 해당 카드만 클래스 토글 (전체 재렌더 안 함)
+  const card = document.querySelector(`.photo-card[data-idx="${idx}"]`);
+  if(card) card.classList.toggle('selected', selected.has(idx));
+  updateInfo();
 }
 function toggleSelectAll(){
   const all = allPhotos();
@@ -723,7 +881,13 @@ function toggleSelectAll(){
   const allSel = visible.every(({i})=>selected.has(i));
   if(allSel) visible.forEach(({i})=>selected.delete(i));
   else visible.forEach(({i})=>selected.add(i));
-  sndTick(); renderGrid();
+  sndTick();
+  // 보이는 카드만 클래스 업데이트
+  document.querySelectorAll('.photo-card[data-idx]').forEach(card=>{
+    const i = parseInt(card.dataset.idx);
+    card.classList.toggle('selected', selected.has(i));
+  });
+  updateInfo();
 }
 function filterCat(cat){ currentCat = cat; renderFilters(); renderGrid(); sndTick(); }
 function switchSection(sec){
@@ -836,8 +1000,8 @@ function renderBoard(){
       <div class="card-inner">
         <div class="card-face card-front"><div class="logo">송쌤<br>과학</div></div>
         <div class="card-face card-back">
-          <img src="${c.img}" alt="${c.name}">
-          <div class="match-label">${c.name}<span class="cat">${c.category||''}${c.detail?' · '+c.detail:''}</span></div>
+          <img src="${c.img}" alt="${esc(c.name)}">
+          <div class="match-label">${esc(c.name)}<span class="cat">${esc(c.category||'')}${c.detail?' · '+esc(c.detail):''}</span></div>
         </div>
       </div>`;
     el.addEventListener('click', ()=>flipCard(el));
@@ -873,17 +1037,14 @@ function fitBoardToScreen(){
   const gap = vw < 520 ? 6 : 8;
   
   // 카드 종횡비는 1:1. 가능한 컬럼 후보들 중 최적 찾기
-  // 후보: 2~8 (카드 수 이하)
+  // 데스크탑 대형 화면에서는 컬럼 수를 더 늘림
+  const maxCols = vw >= 1200 ? 10 : (vw >= 768 ? 8 : 6);
   let best = null;
-  for(let cols = 2; cols <= Math.min(8, total); cols++){
+  for(let cols = 2; cols <= Math.min(maxCols, total); cols++){
     const rows = Math.ceil(total / cols);
-    // 가로 기준 카드 크기
     const cardW = (availW - gap * (cols - 1)) / cols;
-    // 세로 기준 카드 크기 (정사각형이니까 높이도 같아야 함)
     const cardH = (availH - gap * (rows - 1)) / rows;
-    // 둘 중 작은 값이 실제 카드 한 변의 길이
     const size = Math.min(cardW, cardH);
-    // 너무 작으면 패스
     if(size < 50) continue;
     if(!best || size > best.size){
       best = {cols, rows, size};
@@ -964,20 +1125,79 @@ function showComboBurst(n){
 function calcStars(){
   // 효율: 뒤집기 횟수 vs 최소(=totalPairs*2)
   const minMoves = totalPairs * 2;
-  const eff = minMoves / moves; // 1.0 = 완벽
+  const eff = minMoves / moves;
   if(eff >= 0.85) return 3;
   if(eff >= 0.65) return 2;
   return 1;
 }
+
+function calcScore(){
+  const stars = calcStars();
+  const pairs = totalPairs;
+  const minMoves = pairs * 2;
+  
+  // 1) 기본 점수: 쌍 수에 비례
+  const basePts = pairs * 100;
+  // 2) 시간 보너스: 빠르게 클리어할수록 가점 (쌍당 15초 기준)
+  const timeBonus = Math.max(0, (pairs * 15 - timerSec) * 5);
+  // 3) 콤보 보너스
+  const comboBonus = maxCombo * 50;
+  // 4) 효율 보너스: 적은 뒤집기일수록 가점
+  const effBonus = Math.max(0, (minMoves * 3 - moves) * 10);
+  // 5) 별점 보너스
+  const starBonus = stars * 200;
+  
+  const total = basePts + timeBonus + comboBonus + effBonus + starBonus;
+  return {
+    total, stars,
+    breakdown: {basePts, timeBonus, comboBonus, effBonus, starBonus}
+  };
+}
 function showWin(){
   clearInterval(timerInt);
   sndWin();
-  const stars = calcStars();
+  const score = calcScore();
+  const stars = score.stars;
+  
   document.getElementById('winTime').textContent = timerSec;
   document.getElementById('winMoves').textContent = moves;
   document.getElementById('winCombo').textContent = maxCombo;
   document.getElementById('winStars').textContent = '⭐'.repeat(stars) + '☆'.repeat(3-stars);
-  document.getElementById('winScore').textContent = `${stars}점!`;
+  
+  // 점수 표시 (애니메이션으로 0→target 카운트업)
+  animateScore(score.total);
+  
+  // 점수 분해
+  const bd = score.breakdown;
+  document.getElementById('winBreakdown').innerHTML = `
+    <div class="row"><span>🎯 기본 점수 (${totalPairs}쌍)</span><span class="pts">+${bd.basePts.toLocaleString()}</span></div>
+    <div class="row"><span>⏱️ 시간 보너스</span><span class="pts">+${bd.timeBonus.toLocaleString()}</span></div>
+    <div class="row"><span>🔥 콤보 보너스 (x${maxCombo})</span><span class="pts">+${bd.comboBonus.toLocaleString()}</span></div>
+    <div class="row"><span>✨ 효율 보너스</span><span class="pts">+${bd.effBonus.toLocaleString()}</span></div>
+    <div class="row"><span>⭐ 별점 보너스 (${stars}별)</span><span class="pts">+${bd.starBonus.toLocaleString()}</span></div>
+    <div class="row total"><span>합계</span><span class="pts">${score.total.toLocaleString()}점</span></div>
+  `;
+  
+  // 누적 통계 업데이트
+  stats.totalScore += score.total;
+  stats.gamesPlayed += 1;
+  if(stars === 3) stats.perfectClears += 1;
+  let isNewBest = false;
+  if(score.total > stats.bestSingleScore){
+    stats.bestSingleScore = score.total;
+    isNewBest = true;
+  }
+  saveStats();
+  
+  // 베스트 점수 알림
+  const bestEl = document.getElementById('winBestNotice');
+  if(isNewBest && stats.gamesPlayed > 1){
+    bestEl.textContent = '🎉 최고 점수 갱신!';
+    bestEl.className = 'score-best new-record';
+  } else {
+    bestEl.textContent = `🏆 누적 점수: ${stats.totalScore.toLocaleString()}점`;
+    bestEl.className = 'score-best';
+  }
   
   if(gameMode === 'stage'){
     document.getElementById('winEmoji').textContent = curStage.ic;
@@ -985,22 +1205,20 @@ function showWin(){
     document.getElementById('winStageLabel').textContent = `${curStage.nm} 단계 통과!`;
     document.getElementById('winStageLabel').style.display='block';
     document.getElementById('winMsg').textContent = curStage.msg;
-    // 진행도 저장
+    // 진행도 저장 (점수도 포함)
     const key = `${stageCat}_${curStage.lvl}`;
     const prev = progress[key];
-    if(!prev || prev.stars < stars){
-      progress[key] = {stars, bestMoves:moves, bestTime:timerSec};
+    if(!prev){
+      progress[key] = {stars, bestMoves:moves, bestTime:timerSec, bestScore:score.total};
       saveProgress();
-    } else if(prev.stars === stars){
-      if(moves < prev.bestMoves) progress[key].bestMoves = moves;
-      if(timerSec < prev.bestTime) progress[key].bestTime = timerSec;
+    } else {
+      if(stars > prev.stars) prev.stars = stars;
+      if(moves < prev.bestMoves) prev.bestMoves = moves;
+      if(timerSec < prev.bestTime) prev.bestTime = timerSec;
+      if(!prev.bestScore || score.total > prev.bestScore) prev.bestScore = score.total;
       saveProgress();
     }
-    // 마지막 단계
-    if(curStage.lvl === 10){
-      setTimeout(sndStageUp, 800);
-    }
-    // 다음 버튼
+    if(curStage.lvl === 10){ setTimeout(sndStageUp, 800); }
     const nextBtn = document.getElementById('winNextBtn');
     if(curStage.lvl < 10){
       const next = STAGES.find(s=>s.lvl === curStage.lvl+1);
@@ -1019,6 +1237,23 @@ function showWin(){
   
   document.getElementById('winOverlay').classList.add('show');
   confetti();
+}
+
+// 점수 카운트업 애니메이션
+function animateScore(target){
+  const el = document.getElementById('winScoreVal');
+  const duration = 1200;
+  const start = performance.now();
+  function step(now){
+    const t = Math.min(1, (now - start) / duration);
+    // ease-out
+    const eased = 1 - Math.pow(1-t, 3);
+    const cur = Math.floor(target * eased);
+    el.textContent = cur.toLocaleString();
+    if(t < 1) requestAnimationFrame(step);
+    else el.textContent = target.toLocaleString();
+  }
+  requestAnimationFrame(step);
 }
 function winNext(){
   document.getElementById('winOverlay').classList.remove('show');
@@ -1039,7 +1274,8 @@ function quitGame(){
 }
 
 // ===== 캡쳐 =====
-function captureWin(){
+function captureWin(mode){
+  mode = mode || 'download'; // 기본은 다운로드
   const card = document.getElementById('winCard');
   // 버튼 영역 숨기고 캡쳐
   const actions = card.querySelector('.win-actions');
@@ -1060,14 +1296,19 @@ function captureWin(){
     actions.style.display = oldDisplay;
     card.classList.remove('capture-mode');
     canvas.toBlob(blob=>{
-      // 모바일에서 공유 API 우선 사용
-      const file = new File([blob], `송쌤과학_광물암석_Lv${curStage?curStage.lvl:'자유'}.png`, {type:'image/png'});
-      if(navigator.canShare && navigator.canShare({files:[file]})){
-        navigator.share({files:[file], title:'송쌤과학 광물·암석 메모리 카드 게임', text:'기록을 공유해요!'}).catch(()=>{
-          downloadBlob(blob);
-        });
-      } else {
+      if(mode === 'download'){
+        // 무조건 다운로드
         downloadBlob(blob);
+      } else {
+        // 공유 모드: 모바일이면 공유 시트, 데스크탑이면 클립보드 복사 시도
+        const file = new File([blob], `송쌤과학_광물암석_Lv${curStage?curStage.lvl:'자유'}.png`, {type:'image/png'});
+        if(navigator.canShare && navigator.canShare({files:[file]})){
+          navigator.share({files:[file], title:'송쌤과학 광물·암석 메모리 카드 게임', text:'기록을 공유해요!'}).catch(()=>{
+            tryClipboard(blob);
+          });
+        } else {
+          tryClipboard(blob);
+        }
       }
     });
   }).catch(err=>{
@@ -1077,19 +1318,44 @@ function captureWin(){
     console.error(err);
   });
 }
+
+function tryClipboard(blob){
+  // 클립보드에 이미지 복사 시도 (Chrome 등 지원)
+  if(navigator.clipboard && window.ClipboardItem){
+    try{
+      const item = new ClipboardItem({'image/png': blob});
+      navigator.clipboard.write([item]).then(()=>{
+        toast('클립보드에 복사했어요! 📋');
+      }).catch(()=>{
+        // 클립보드 실패 시 다운로드로 폴백
+        downloadBlob(blob);
+      });
+    } catch(e){
+      downloadBlob(blob);
+    }
+  } else {
+    // 클립보드 API 미지원: 다운로드로 폴백
+    downloadBlob(blob);
+  }
+}
+
 function downloadBlob(blob){
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url; a.download = `송쌤과학_광물암석_${curStage?'Lv'+curStage.lvl:'자유'}_${new Date().getTime()}.png`;
   document.body.appendChild(a); a.click(); document.body.removeChild(a);
   setTimeout(()=>URL.revokeObjectURL(url), 1000);
-  toast('이미지를 저장했어요! 📷');
+  toast('이미지를 저장했어요! 💾');
 }
 
 // ===== 컨페티 =====
 function confetti(){
+  // 저사양/저전력 환경에서는 컨페티 줄이기
+  const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(reduce) return;
+  const count = window.innerWidth < 520 ? 30 : 60;
   const colors = ['#e8a951','#5fb878','#7aaf8c','#e57373','#c98d4b','#e85a8c','#5a9fd4'];
-  for(let i=0;i<60;i++){
+  for(let i=0;i<count;i++){
     const p = document.createElement('div');
     p.className='confetti-piece';
     p.style.cssText = `width:10px;height:14px;background:${colors[i%colors.length]};top:-20px;left:${Math.random()*100}%;border-radius:2px;transform:rotate(${Math.random()*360}deg)`;
@@ -1117,8 +1383,9 @@ function onResize(){
 window.addEventListener('resize', onResize);
 window.addEventListener('orientationchange', ()=>setTimeout(onResize, 200));
 
-// 시작 시 단계 화면 카드 카운트 미리 계산
+// 시작 시 단계 화면 카드 카운트 + 홈 통계 미리 계산
 renderCounts();
+renderHomeStats();
 </script>
 </body>
 </html>
